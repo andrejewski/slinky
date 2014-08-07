@@ -13,6 +13,8 @@ npm install slinky
 
 ## Usage
 
+Slinky is straightforward to use. Give Slinky a URL and it will index the webpages in that domain.
+
 ```javascript
 var slinky = require('slinky');
 slinky.index('http://example.com', function(error, links) {
@@ -28,6 +30,37 @@ slinky.index('http://example.com', function(error, links) {
 	*/
 });
 ```
+
+## Slinky Class
+
+Slinky is a class that accepts optional configuration options.
+
+```javascript
+var Slinky = require('slinky').Slinky;
+
+new Slinky({ // `new` is optional
+	// default options
+	limit: 100,		// limit the number of links returned
+	depth: 3,		// limit recursion of the index 
+	restrict: true,	// limit indexing to the domain of the url
+	concurrency: 5	// how many async.queue workers to use
+});
+```
+
+### Slinky#index()
+- `#index(
+	url String,
+	done Callback(error Error, links Array[String]))`
+- `#index(
+	url String,
+	each Callback(link String), 
+	done Callback(error Error, links Array[String]))`
+
+The `each` callback will receive each scraped link as they are processed. This is a method of streaming the links instead of waiting for the `done` callback.
+
+The `#index()` is the only method that actually does anything. The other methods of the Slinky class are exposed purely for customization of Slinky. 
+
+While the source is there to be read, some overridable methods to note are `#scrapeLinks()` if anchor tags are not what you are targeting and `#validResponse()` if webpages do not have to be HTML. Again, everything is configurable.
 
 ## Contributing
 
